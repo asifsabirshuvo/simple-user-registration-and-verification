@@ -1,0 +1,21 @@
+<% include partials/header %>
+<h1>  Search result page  </h1>
+
+	<il>
+	<% users.forEach(function(user){ %>
+
+		<li style="background-color:#32CD32;margin:5px;color:white;padding:5px;text-align:center;">
+				<b>Name: </b><%= user.first_name %>
+			  	<%= user.last_name  %><br>&nbsp;&nbsp;
+			  	<b>Email: </b><%= user.email  %>
+			  	
+	    </li>
+	<% }) %>
+
+	<% if(users.length <1){ %>
+
+	<h1 style="background-color:red; padding:8px; color:white;text-align:center;margin:auto;float:center;"> Nothing found </h1>
+
+	<% } %>
+
+</il>
