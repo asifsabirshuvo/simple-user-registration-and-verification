@@ -1,104 +1,187 @@
-var express = require('express');
-var bodyParser = require('body-parser');
-var path = require('path');
+		var express = require('express');
+		var bodyParser = require('body-parser');
+		var path = require('path');
 
-var mongojs =  require('mongojs')
-var db =  mongojs('customerapp',['users']);
-var ObjectId = mongojs.ObjectId;
-var app = express();
+		var crypto = require('crypto');	
 
 
-//View Engine
-app.set('view engine','ejs');
-app.set('views',path.join(__dirname,'views'));
+		var mongojs =  require('mongojs')
+		var db =  mongojs('customerapp',['users']);
+		var ObjectId = mongojs.ObjectId;
+		var app = express();
+
+		var nodemailer = require('nodemailer');
+
+		// var transporter = nodemailer.createTransport({
+		// 	service: 'mail.google.com',
+		// 	auth: {
+		// 		user: 'rmabd.official@gmail.com',
+		// 		pass: 'you_know'
+		// 	}
+		// });
 
 
-//body parser middleware
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended:false}));
-
-//set static path
-app.use(express.static(path.join(__dirname,'public')));
-
-
-
-app.get('/',function(req,res){
-	db.users.find(function(err,docs){
-		res.render('index',{
-			title: 'customers',
-			users: docs
-		});
-	})
-
-
-});
-
-
-
-
-app.post('/users/search',function(req,res){
+	    var transOptions = {
+			host:  'in-v3.mailjet.com',
+			port: 587,
+			secure: false,
+			ignoreTLS: true,
+			auth: {
+	 			   user: '311e2466974313680f865d15331bb0b8',
+	 			   pass: '3d44aa618c4002916dfd07406708a58f'			}
+		};
 	
-	var search_name = req.body.search_first_name;
-	res.redirect('/users/search/'+search_name);
-
-});
+		var transporter = nodemailer.createTransport(transOptions);
 
 
-app.get('/users/search/:search_name',function(req,res){
 
-	var user_name =  req.params.search_name.toLowerCase();
+		//View Engine
+		app.set('view engine','ejs');
+		app.set('views',path.join(__dirname,'views'));
 
-	db.users.find({ first_name: user_name }).toArray(function(err, result) {
-		console.log(result);
-    		if (err) throw err;
-		res.render('search',{
-			users: result
+
+		//body parser middleware
+		app.use(bodyParser.json());
+		app.use(bodyParser.urlencoded({extended:false}));
+
+		//set static path
+		app.use(express.static(path.join(__dirname,'public')));
+
+
+
+		app.get('/',function(req,res){
+			db.users.find(function(err,docs){
+				res.render('index',{
+					title: 'customers',
+					users: docs
+				});
+			})
+
 		});
-    // console.log(result);
-    // db.close();
-  
-  });
-
-
-
-	// db.users.find({ first_name: user_name } ,function(err,docs){
-	// 	res.render('search',{
-	// 		users: docs
-	// 	});
-	// });
-
-});
 
 
 
 
+		app.post('/users/search',function(req,res){
+			
+			var search_name = req.body.search_first_name;
+			res.redirect('/users/search/'+search_name);
 
-app.post('/users/add',function(req,res){
-	var newUser = { 
-		first_name:req.body.first_name.toLowerCase(),
-		last_name:req.body.last_name,
-		email:req.body.email
-	}
+		});
 
-		db.users.insert(newUser,function(err,result){
+		//validating email address of the user
+
+		app.get('/verify/:token',function(req,res){
+
+			var token =  req.params.token;
+
+			db.users.find({ token: token }).toArray(function(err, result) {
+				console.log(result);
+				if (err) throw err;
+
+				if(result.length<1){
+					res.render('error');
+				}
+				else{
+					res.render('success');
+					console.log(result[0]._id)
+
+					 db.users.update({'_id':result[0]._id}, {$set:{'valid':'true'}});
+				// 		// db.city.update({_id:ObjectId("584a13d5b65761be678d4dd4")}, {$set: {"citiName":"Jakarta Pusat"}})
+					 	
+					console.log(result[0])
+
+				} //else closing
+
+
+				});
+			});
+
+
+		
+		//searching . . user.....
+
+
+		app.get('/users/search/:search_name',function(req,res){
+
+			var user_name =  req.params.search_name.toLowerCase();
+
+			db.users.find({ first_name: user_name }).toArray(function(err, result) {
+				console.log(result);
+				if (err) throw err;
+
+				if(result.length<1){
+					res.render('error');
+				}
+				else{
+					res.render('search',{
+						users: result
+					});}
+
+				});
+
+		});
+
+
+
+
+
+		app.post('/users/add',function(req,res){
+	
+			var token = crypto.randomBytes(64).toString('hex');
+			var newUser = { 
+				first_name:req.body.first_name.toLowerCase(),
+				last_name:req.body.last_name,
+				email:req.body.email,
+				token:token,
+				valid: false
+
+			}
+
+
+			db.users.insert(newUser,function(err,result){
+				if(err){
+					console.log(err);
+				}
+						
+						var link = 'localhost:3000/verify/'+token;
+
+						//sending confirmation email
+						var mailOptions = {
+							from: 'asifsabir4u@gmail.com',
+							to: req.body.email,
+							subject: 'NodeJs Mailing sample',
+							html: '<h1>Welcome </h1>'+ req.body.first_name +'<p>Click <a href="http://localhost:3000/verify/' + token + '">here</a> to verify</p>'
+
+						};
+
+						transporter.sendMail(mailOptions, function(error, info){
+							if (error) {
+								console.log(error);
+							} else {
+								console.log('Email sent: ' + info.response);
+							}
+						});
+
+					res.redirect('/');
+					console.log(result);
+				});
+		})
+
+
+		app.delete('/users/delete/:id',function(req,res){
+			db.users.remove({_id: ObjectId(req.params.id)},function(err,result){
 				if(err){
 					console.log(err);
 				}
 				res.redirect('/');
-				console.log(result);
-			
+			})
 		});
-})
 
-app.delete('/users/delete/:id',function(req,res){
-db.users.remove({_id: ObjectId(req.params.id)},function(err,result){
-	if(err){
-		console.log(err);
-	}
-	res.redirect('/');
-})
-});
 
-app.listen(3000,function(){
-	console.log('server running on port 3000...');
-});
+
+
+
+		app.listen(3000,function(){
+			console.log('server running on port 3000...');
+		});

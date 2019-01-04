@@ -30,7 +30,8 @@ border-left:5px solid red;
 	<label>Email</label>
 	<input type="text" name = "email" style="color:black;"
 	placeholder="example@example.com">
-	<br><br>
+	<br>
+	
 	<input type= "submit" value  = "submit" style="color:black;">
 </form>
 <br><br><br>
@@ -45,15 +46,17 @@ border-left:5px solid red;
         <th>Firstname</th>
         <th>Lastname</th>
         <th>Email</th>
+        <th>valid</th>
+
       </tr>
     </thead>
     <tbody>
-    <% users.forEach(function(user){ %>
-
-      <tr>
+    <% users.forEach(function(user){  %>
+      <tr>      
         <td><%= user.first_name%></td>
         <td><%= user.last_name  %></td>
         <td><%= user.email  %></td>
+        <td><%= user.valid  %></td>
         <td><a href="#" style="background-color:red;text-decoration:none;
 				border-left:3px solid white;padding-left:5px;
 			  	padding:3px; color:white;float:right;" class="deleteUser"
