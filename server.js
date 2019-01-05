@@ -154,7 +154,7 @@
 							from: 'asifsabir4u@gmail.com',
 							to: req.body.email,
 							subject: 'NodeJs Mailing sample',
-							html: '<h1>Welcome </h1>'+ req.body.first_name +'<p>Click <a href="http://localhost:3000/verify/' + token + '">here</a> to verify</p>'
+							html: '<h1>Welcome </h1>'+ req.body.first_name +'<p>Click <a href="https://user-reg-sample.herokuapp.com/verify/' + token + '">here</a> to verify</p>'
 
 						};
 
