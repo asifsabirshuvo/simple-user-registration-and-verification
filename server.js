@@ -147,7 +147,7 @@
 					console.log(err);
 				}
 						
-						var link = 'localhost:3000/verify/'+token;
+
 
 						//sending confirmation email
 						var mailOptions = {
