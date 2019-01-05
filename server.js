@@ -182,6 +182,6 @@
 
 
 
-		app.listen(80,function(){
+		app.listen(process.env.PORT,function(){
 			console.log('server running on port 3000...');
 		});
