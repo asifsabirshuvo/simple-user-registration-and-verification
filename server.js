@@ -5,9 +5,9 @@
 		var crypto = require('crypto');	
 
 
-		/*var mongojs =  require('mongojs')
-		var db =  mongojs('customerapp',['users']);
-		var ObjectId = mongojs.ObjectId; */
+		var mongojs =  require('mongojs')
+		var db =  mongojs("mongodb://asifsabir4u:asif007@ds147797.mlab.com:47797/customerapp",['users']);
+		var ObjectId = mongojs.ObjectId; 
 
 		
 
@@ -54,24 +54,12 @@
 
 
 		app.get('/',function(req,res){
-			var MongoClient = require('mongodb').MongoClient;
-			//Create a database named "mydb":
-			var url = "mongodb://asifsabir4u:asif007@ds147797.mlab.com:47797/customerapp";
-
-			MongoClient.connect(url, function(err, db) {
-			  if (err) throw err;
-			  console.log("Database created!");
-			  res.render('index');
-			
-			/*db.users.find(function(err,docs){
+			db.users.find(function(err,docs){
 				res.render('index',{
 					title: 'customers',
 					users: docs
 					});
-				})*/
-			db.close();
-			});
-
+				})
 		});
 
 
