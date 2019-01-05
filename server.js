@@ -63,12 +63,12 @@
 			  console.log("Database created!");
 			  
 			
-			db.users.find(function(err,docs){
+			/*db.users.find(function(err,docs){
 				res.render('index',{
 					title: 'customers',
 					users: docs
 					});
-				})
+				})*/
 			db.close();
 			});
 
