@@ -61,7 +61,7 @@
 			MongoClient.connect(url, function(err, db) {
 			  if (err) throw err;
 			  console.log("Database created!");
-			  
+			  res.render('index');
 			
 			/*db.users.find(function(err,docs){
 				res.render('index',{
