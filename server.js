@@ -7,6 +7,7 @@
 
 		var mongojs =  require('mongojs')
 		var db =  mongojs("mongodb://asifsabir4u:asif007@ds147797.mlab.com:47797/customerapp",['users']);
+//		var db =  mongojs('customerapp',['users']);
 		var ObjectId = mongojs.ObjectId; 
 
 		
@@ -62,6 +63,14 @@
 				})
 		});
 
+		app.get('/all',function(req,res){
+			db.users.find(function(err,docs){
+				
+				res.json(docs);
+
+				})
+		});
+
 
 
 
@@ -90,7 +99,6 @@
 					console.log(result[0]._id)
 
 					 db.users.update({'_id':result[0]._id}, {$set:{'valid':'true'}});
-				// 		// db.city.update({_id:ObjectId("584a13d5b65761be678d4dd4")}, {$set: {"citiName":"Jakarta Pusat"}})
 					 	
 					console.log(result[0])
 
@@ -108,7 +116,6 @@
 		app.get('/users/search/:search_name',function(req,res){
 
 			var user_name =  req.params.search_name.toLowerCase();
-
 			db.users.find({ first_name: user_name }).toArray(function(err, result) {
 				console.log(result);
 				if (err) throw err;
@@ -167,7 +174,7 @@
 						});
 
 					res.redirect('/');
-					console.log(result);
+					console.log(JSON.stringify(result));
 				});
 		})
 
