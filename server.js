@@ -8,14 +8,14 @@
 		var mongojs =  require('mongojs')
 		var db =  mongojs("mongodb://asifsabir4u:asif007@ds147797.mlab.com:47797/customerapp",['users']);
 //		var db =  mongojs('customerapp',['users']);
-		var ObjectId = mongojs.ObjectId; 
-
-		
+var ObjectId = mongojs.ObjectId; 
 
 
-		var app = express();
 
-		var nodemailer = require('nodemailer');
+
+var app = express();
+
+var nodemailer = require('nodemailer');
 
 		// var transporter = nodemailer.createTransport({
 		// 	service: 'mail.google.com',
@@ -26,17 +26,17 @@
 		// });
 
 
-	    var transOptions = {
+		var transOptions = {
 			host:  'in-v3.mailjet.com',
 			port: 587,
 			secure: false,
 			ignoreTLS: true,
 			auth: {
-	 			   user: '311e2466974313680f865d15331bb0b8',
-	 			   pass: '3d44aa618c4002916dfd07406708a58f'			}
-		};
-	
-		var transporter = nodemailer.createTransport(transOptions);
+				user: '311e2466974313680f865d15331bb0b8',
+				pass: '3d44aa618c4002916dfd07406708a58f'			}
+			};
+
+			var transporter = nodemailer.createTransport(transOptions);
 
 
 
@@ -59,8 +59,8 @@
 				res.render('index',{
 					title: 'customers',
 					users: docs
-					});
-				})
+				});
+			})
 		});
 
 		app.get('/all',function(req,res){
@@ -68,18 +68,40 @@
 				
 				res.json(docs);
 
-				})
+			})
 		});
 
 
+		app.get('/counter',function(req,res){
+
+				db.users.find(function(err,docs){			
+
+					res.render('counter',{
+						users: docs
+					});
+				});
 
 
-		app.post('/users/search',function(req,res){
-			
-			var search_name = req.body.search_first_name;
-			res.redirect('/users/search/'+search_name);
+			});
 
-		});
+
+
+// declaring all error messages
+app.get('*',function(req,res){
+	res.render('error');	
+});
+
+
+
+
+
+app.post('/users/search',function(req,res){
+
+	var search_name = req.body.search_first_name;
+	res.redirect('/users/search/'+search_name);
+
+});
+
 
 		//validating email address of the user
 
@@ -98,15 +120,15 @@
 					res.render('success');
 					console.log(result[0]._id)
 
-					 db.users.update({'_id':result[0]._id}, {$set:{'valid':'true'}});
-					 	
+					db.users.update({'_id':result[0]._id}, {$set:{'valid':'true'}});
+
 					console.log(result[0])
 
 				} //else closing
 
 
-				});
 			});
+		});
 
 
 		
@@ -127,24 +149,19 @@
 					res.render('search',{
 						users: result
 					});}
-
 				});
-
 		});
 
 
-
-
-
 		app.post('/users/add',function(req,res){
-	
+
 			var token = crypto.randomBytes(64).toString('hex');
 			var newUser = { 
 				first_name:req.body.first_name.toLowerCase(),
 				last_name:req.body.last_name,
 				email:req.body.email,
 				token:token,
-				valid: false
+				valid: false 
 
 			}
 
@@ -153,8 +170,6 @@
 				if(err){
 					console.log(err);
 				}
-						
-
 
 						//sending confirmation email
 						var mailOptions = {
@@ -173,9 +188,9 @@
 							}
 						});
 
-					res.redirect('/');
-					console.log(JSON.stringify(result));
-				});
+						res.redirect('/');
+						console.log(JSON.stringify(result));
+					});
 		})
 
 
