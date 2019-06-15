@@ -63,11 +63,27 @@ var nodemailer = require('nodemailer');
 			})
 		});
 
+
+		app.get('/sound',function(req,res){
+
+				res.render('sound');
+		});
+
 		app.get('/all',function(req,res){
 			db.users.find(function(err,docs){
 				
 				res.json(docs);
 
+			})
+		});
+
+
+		app.get('/deleteall',function(req,res){
+			db.users.remove({},function(err,result){
+				if(err){
+					console.log(err);
+				}
+				res.redirect('/counter');
 			})
 		});
 
@@ -79,6 +95,16 @@ var nodemailer = require('nodemailer');
 					res.render('counter',{
 						users: docs
 					});
+				});
+
+
+			});
+
+			app.get('/val',function(req,res){
+
+				db.users.find(function(err,docs){			
+
+					res.json(docs);
 				});
 
 
@@ -138,17 +164,18 @@ app.post('/users/search',function(req,res){
 		app.get('/users/search/:search_name',function(req,res){
 
 			var user_name =  req.params.search_name.toLowerCase();
-			db.users.find({ first_name: user_name }).toArray(function(err, result) {
+
+//			db.users.find({ first_name: user_name }).toArray(function(err, result) {
+			
+			
+
+			db.users.find({$text: { $search: user_name }}).toArray(function(err, result) {
 				console.log(result);
 				if (err) throw err;
 
-				if(result.length<1){
-					res.render('error');
-				}
-				else{
 					res.render('search',{
 						users: result
-					});}
+					});
 				});
 		});
 
