@@ -113,20 +113,44 @@ var nodemailer = require('nodemailer');
 
 
 // declaring all error messages
-app.get('*',function(req,res){
-	res.render('error');	
-});
-
-
-
+// app.get('*',function(req,res){
+// 	res.render('error');	
+// });
 
 
 app.post('/users/search',function(req,res){
-
+			
 	var search_name = req.body.search_first_name;
 	res.redirect('/users/search/'+search_name);
 
 });
+
+
+//searching . . user..data...
+
+
+app.get('/users/search/:search_name',function(req,res){
+
+	var user_name =  req.params.search_name.toLowerCase();
+
+	db.users.find({$text:{$search:user_name}}).toArray(function(err, result) {
+		console.log(result);
+		if (err) throw err;
+
+		if(result.length<1){
+			res.render('error');
+		}
+		else{
+			res.render('search',{
+				users: result
+			});}
+
+		});
+
+});
+
+
+
 
 
 		//validating email address of the user
@@ -158,28 +182,7 @@ app.post('/users/search',function(req,res){
 
 
 		
-		//searching . . user..data...
-
-
-		app.get('/users/search/:search_name',function(req,res){
-
-			var user_name =  req.params.search_name.toLowerCase();
-
-//			db.users.find({ first_name: user_name }).toArray(function(err, result) {
-			
-			
-
-			db.users.find({$text: { $search: user_name }}).toArray(function(err, result) {
-				console.log(result);
-				if (err) throw err;
-
-					res.render('search',{
-						users: result
-					});
-				});
-		});
-
-
+	
 		app.post('/users/add',function(req,res){
 
 			var token = crypto.randomBytes(64).toString('hex');
