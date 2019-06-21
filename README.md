@@ -8,3 +8,4 @@ used :
 * nodemailer with mailjet. (please replace credentials with your account)
 * express
 * ejs template engine
+* xhr
