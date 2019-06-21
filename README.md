@@ -6,4 +6,4 @@ used :
 * mongodb
 * nodemailer with mailjet. (please replace credentials with your account)
 * express
-* ejs
+* ejs template engine
