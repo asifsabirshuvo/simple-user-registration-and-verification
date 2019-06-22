@@ -37,7 +37,7 @@ var nodemailer = require('nodemailer');
 //setting up for namecheap
 
 		var transOptions = {
-			host:  'contact@asifsabirshuvo.me',
+			host:  'mail.privateemail.com',
 			port: 465,
 		    secure: true,
 			auth: {
