@@ -203,7 +203,7 @@ app.get('/users/search/:search_name',function(req,res){
 
 						//sending confirmation email
 						var mailOptions = {
-							from: 'contact@asifsabirshuvo.me',
+							from: 'asifsabir4u@gmail.com',
 							to: req.body.email,
 							subject: 'NodeJs Mailing sample',
 							html: '<h1>Welcome </h1>'+ req.body.first_name +'<p>Click <a href="https://user-reg-sample.herokuapp.com/verify/' + token + '">here</a> to verify</p>'
