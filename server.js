@@ -17,20 +17,29 @@ var app = express();
 
 var nodemailer = require('nodemailer');
 
-		// var transporter = nodemailer.createTransport({
-		// 	service: 'mail.google.com',
-		// 	auth: {
-		// 		user: 'rmabd.official@gmail.com',
-		// 		pass: 'you_know'
-		// 	}
-		// });
-
+	
+/* mailjet setup
 
 		var transOptions = {
-			host:  'contact@asifsabirshuvo.me',
+			host:  'in-v3.mailjet.com',
 			port: 587,
 			secure: false,
 			ignoreTLS: true,
+			auth: {
+				user: '311e2466974313680f865d15331bb0b8',
+				pass: '3d44aa618c4002916dfd07406708a58f'			}
+			};
+
+			var transporter = nodemailer.createTransport(transOptions);
+*/
+
+
+//setting up for namecheap
+
+		var transOptions = {
+			host:  'contact@asifsabirshuvo.me',
+			port: 465,
+		    secure: true,
 			auth: {
 				user: 'contact',
 				pass: 'asif007'			}
