@@ -38,11 +38,11 @@ var nodemailer = require('nodemailer');
 
 		var transOptions = {
 			host:  'mail.privateemail.com',
-			port: 465,
-		    secure: true,
+			port: 587,
+		    secure: false,
 			auth: {
 				user: 'contact',
-				pass: 'asif007'			}
+				pass: 'Asif007'			}
 			};
 
 			var transporter = nodemailer.createTransport(transOptions);
